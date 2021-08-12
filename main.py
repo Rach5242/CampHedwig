@@ -1,0 +1,54 @@
+import discord, os, dotenv
+from discord.ext import commands
+from dotenv import load_dotenv
+from Cogs import database as db
+
+intents = discord.Intents.default()
+intents.members = True
+
+async def get_prefix(bot, message):
+    if message.guild is not None:
+        r = await db.fetch_prefix(message.guild.id)
+        if r is not None:
+            return commands.when_mentioned_or(r[0])(bot, message)
+        elif r is None:
+            return commands.when_mentioned_or("=")(bot, message)
+            await db.add_prefix(message.guild.id, "=")
+        else:
+            return commands.when_mentioned_or("=")(bot, message)
+
+
+class MyBot(commands.Bot):
+    def __init__(self):
+        super().__init__(
+            command_prefix=get_prefix,
+            activity=discord.Game(name="Marco Polo at Lake Hedwig!"),
+            help_command=None,
+            intents = intents,
+        )
+        self.user_ids = [765324522676682803, 694322536397406238, 700057705951395921]
+
+bot = MyBot()
+
+load_dotenv()
+
+TOKEN = os.getenv('TOKEN')
+
+@bot.event
+async def on_ready():
+    print(f"{bot.user} has logged onto Discord")
+
+startup_extensions = ['general', 'drops']
+
+for extension in startup_extensions: 
+    try:
+        bot.load_extension(f"Cogs.{extension}")
+    except Exception as e:
+        exec = "{} : {}".format(extension, e)
+        print(exec)
+
+
+try:
+    bot.run(TOKEN, bot=True, reconnect=True)
+except:
+    print("ERROR: Bot failed to start. This is probably due to an invalid token.")
