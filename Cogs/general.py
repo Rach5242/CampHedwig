@@ -20,8 +20,16 @@ class General(commands.Cog):
             description="Anything in:\n`[]` is Optional \n`<>` is mandatory.",
             color=discord.Colour.dark_green()
         )
-        embed.add_field(name=f"`{ctx.prefix}leaderboards` | Aliases: `{ctx.prefix}top`, `{ctx.prefix}lb` ", value="Displays the top ten members in the server.", inline=False)
-        embed.add_field(name=f"`{ctx.prefix}claims [@Member]`| Aliases: `None`", value="Display's your personal marshmallow count, or that of the mentioned member.", inline=False)
+        embed.add_field(
+            name=f"`{ctx.prefix}leaderboards` | Aliases: `{ctx.prefix}top`, `{ctx.prefix}lb` ", 
+            value="Displays the top ten members in the server.", 
+            inline=False
+        )
+        embed.add_field(
+            name=f"`{ctx.prefix}claims [@Member]`| Aliases: `None`", 
+            value="Display's your personal marshmallow count, or that of the mentioned member.", 
+            inline=False
+        )
 
         await ctx.message.delete()
         await ctx.send(embed=embed)
@@ -65,6 +73,29 @@ class General(commands.Cog):
 
             await ctx.message.delete()
             await ctx.send(embed=discord.Embed(description=response, color=discord.Colour.dark_green()), delete_after=10)
+
+    @commands.command(description="Help embed for setting up drops")
+    async def sethelp(self, ctx):
+        if ctx.author.id in self.bot.user_ids:
+            embed = discord.Embed(
+                title="Setup Help",
+                description="Anything in: \n`[]` is Optional \n`<>` is Mandatory",
+                color=discord.Colour.dark_green()
+            )
+            embed.add_field(
+                name=f"`{ctx.prefix}set <marker> <setting>`", 
+                value=f"""Sets various drop settings. 
+                         
+                         **Markers**
+                         > `dropchannel` - *Mentioned channel* 
+                         > `droptime` - *Time as a number and letter ex: `1m`, `1h` or `1d` (m = Minutes, h = Hours, d = Days.)*
+                         > `drop` - *Turns drops on or off.* Ex: `{ctx.prefix}set drop on`
+                         > `prefix` - *Sets the prefix for the server.* Ex: `{ctx.prefix}set prefix <new_prefix>`
+                        """,
+                inline=False
+            )
+            await ctx.message.delete()
+            await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(General(bot))
