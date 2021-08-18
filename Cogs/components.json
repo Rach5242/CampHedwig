@@ -1,7 +1,8 @@
 {
     "drops" : {
         "guild_id" : 0,
-        "images": ["https://media.giphy.com/media/t3NDtNT17oxzO/giphy.gif",
+        "images": [
+            "https://media.giphy.com/media/t3NDtNT17oxzO/giphy.gif",
             "https://media.giphy.com/media/3oeHLleLUpNVIcPnlC/giphy.gif",
             "https://media.giphy.com/media/1AunKpz3cdCpy/giphy.gif",
             "https://media.giphy.com/media/l0ExlQLMHLxAt2p6E/giphy.gif",
