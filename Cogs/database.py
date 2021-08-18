@@ -1,5 +1,4 @@
 import sqlite3
-from sqlite3.dbapi2 import Time
 import discord
 from discord.ext import commands
 import datetime
@@ -7,13 +6,11 @@ import datetime
 """
 DROP DATASET MAKEUP
 
-0. guild_id
-1. channel
-2. emoji
-3. message
-4. image
-5. time
-6. last_drop
+0. Guild ID: int
+1. Channel ID: int
+2. Duration: int
+3. Last Drop: Datetime OBJ
+4. Active: True/False
 """
 
 async def TimeNow():
