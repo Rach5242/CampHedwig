@@ -1,5 +1,4 @@
 
 .env
-Cogs/__pycache__/database.cpython-39.pyc
 *.pyc
 *.sqlite
