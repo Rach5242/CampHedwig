@@ -1,5 +1,27 @@
 {
-    "jokes": [
-        ""
-    ]
+    "drops" : {
+        "guild_id" : 0,
+        "images": ["https://media.giphy.com/media/t3NDtNT17oxzO/giphy.gif",
+            "https://media.giphy.com/media/3oeHLleLUpNVIcPnlC/giphy.gif",
+            "https://media.giphy.com/media/1AunKpz3cdCpy/giphy.gif",
+            "https://media.giphy.com/media/l0ExlQLMHLxAt2p6E/giphy.gif",
+            "https://media.giphy.com/media/6D6oFhFuYnXpl5M77k/giphy.gif",
+            "https://media.giphy.com/media/35OtEmhFhnbtG9g49C/giphy.gif",
+            "https://media.giphy.com/media/Wj8V6Uhs2a50wVqITL/giphy.gif",
+            "https://media.giphy.com/media/tIBFvTj3sYEI5eRwV5/giphy.gif",
+            "https://media.giphy.com/media/S60PZgDyT51DAlgPCM/giphy.gif",
+            "https://media.giphy.com/media/S60PZgDyT51DAlgPCM/giphy.gif"
+        ],
+        "messages" : [
+            "Hope you like your mashmallows with extra flavour as yours is burnt from the fire",
+            "The best way to enjoy smores is with friends",
+            "Oops, Your marshmallow burnt while you were singing a campfire song",
+            "Oh look a shooting stat, Oh no that look away burnt your mashmallow",
+            "Nothing tastes as good as a delcious camp fire cooked marshmallow",
+            "Lets have a fluffly bunny compertitiion with marshmallows lets see who wins.",
+            "mmmmmmmmmmarshmallow, get in my tummy now!",
+            "Whats squishy and full of sugar? Marshmallows"
+        ]
+
+    }
 }

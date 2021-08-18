@@ -38,6 +38,16 @@ TOKEN = os.getenv('TOKEN')
 async def on_ready():
     print(f"{bot.user} has logged onto Discord")
 
+@bot.command(hidden=True)
+async def reload(ctx, extension):
+    try:
+        bot.reload_extension(f"Cogs.{extension}")
+        await ctx.send(f":white_check_mark: Extension `{extension}` has been reloaded.")
+    except Exception as e:
+        exec = "{} : {}".format(extension, e)
+        print(exec)
+        await ctx.send(f":x: Failed to reload extension `{extension}`. Refer to console for error printout.")
+
 startup_extensions = ['general', 'drops']
 
 for extension in startup_extensions: 

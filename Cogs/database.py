@@ -1,4 +1,5 @@
 import sqlite3
+from sqlite3.dbapi2 import Time
 import discord
 from discord.ext import commands
 import datetime
@@ -15,16 +16,20 @@ DROP DATASET MAKEUP
 6. last_drop
 """
 
+async def TimeNow():
+    now = datetime.datetime.utcnow().strftime("%m %d, %Y %H:%M:%S")
+    return now
 
 async def set_drop_channel(guild, channel):
     r = await fetch_drop(guild)
     db = sqlite3.connect('drops.sqlite') 
     c = db.cursor()
     if r is None:
-        c.execute("INSERT INTO drops(guild_id, channel) VALUES(?,?)",(guild, channel,))
+        time = await TimeNow()
+        c.execute("INSERT INTO drops_config(guild_id, channel, last_drop) VALUES(?,?,?)",(guild, channel, time,))
     
     elif r is not None:
-        c.execute("UPDATE drops SET channel = ? WHERE guild_id = ?", (channel, guild,))
+        c.execute("UPDATE drops_config SET channel = ? WHERE guild_id = ?", (channel, guild,))
     
     db.commit()
     c.close()
@@ -61,7 +66,7 @@ async def fetch_user(guild, user):
 async def fetch_all(guild):
     db = sqlite3.connect('drops.sqlite')
     cursor = db.cursor()
-    results = cursor.execute("SELECT user_id, count FROM users WHERE guild_id = ? and active = ? ORDER BY count DESC", (guild, 'True',)).fetchall()
+    results = cursor.execute("SELECT user_id, count FROM users WHERE guild_id = ? and active = ? ORDER BY count ASC", (guild, 'True',)).fetchall()
     cursor.close()
     db.close()
     return results
@@ -93,10 +98,11 @@ async def set_msg_time(guild, time):
     db = sqlite3.connect('drops.sqlite')
     c = db.cursor()
     if r is None:
-        c.execute("INSERT INTO drops(guild_id, time) VALUES(?,?)", (guild, time,))
+        timenow = await TimeNow
+        c.execute("INSERT INTO drops_config(guild_id, duration, last_drop) VALUES(?,?,?)", (guild, time, timenow,))
     
     elif r is not None:
-        c.execute("UPDATE drops SET time = ? WHERE guild_id = ?", (time, guild,)) 
+        c.execute("UPDATE drops_config SET duration = ? WHERE guild_id = ?", (time, guild,)) 
 
     db.commit()
     c.close()
@@ -105,7 +111,7 @@ async def set_msg_time(guild, time):
 async def fetch_all_drops():
     db = sqlite3.connect('drops.sqlite')
     c = db.cursor()
-    results = c.execute("SELECT * FROM drops").fetchall()
+    results = c.execute("SELECT * FROM drops_config").fetchall()
     c.close()
     db.close()
     return results
@@ -113,58 +119,32 @@ async def fetch_all_drops():
 async def fetch_drop(guild):
     db = sqlite3.connect('drops.sqlite')
     c = db.cursor()
-    result = c.execute("SELECT * FROM drops WHERE guild_id = ?", (guild,)).fetchone()
+    result = c.execute("SELECT * FROM drops_config WHERE guild_id = ?", (guild,)).fetchone()
     c.close()
     db.close()
     return result
 
-async def set_drop_msg(guild, message):
-    r = await fetch_drop(guild)
-    db = sqlite3.connect('drops.sqlite')
-    c = db.cursor()
-    if r is None:
-        c.execute("INSERT INTO drops(guild_id, message) VALUES(?,?)", (guild, message,))
-    
-    elif r is not None:
-        c.execute("UPDATE drops SET message = ? WHERE guild_id = ?", (message, guild,))
-    
-    db.commit()
-    c.close()
-    db.close()
-
-async def set_drop_image(guild, image):
-    r = await fetch_drop(guild)
-    db = sqlite3.connect('drops.sqlite')
-    c = db.cursor()
-    if r is None:
-        c.execute("INSERT INTO drops(guild_id, image) VALUES(?,?)", (guild, image,))
-    
-    elif r is not None:
-        c.execute("UPDATE drops SET image = ? WHERE guild_id = ?", (image, guild,))
-    
-    db.commit()
-    c.close()
-    db.close()
-
-async def set_drop_emoji(guild, emoji):
-    r = await fetch_drop(guild)
-    db = sqlite3.connect('drops.sqlite')
-    c = db.cursor()
-    if r is None:
-        c.execute("INSERT INTO drops(guild_id, emoji) VALUES(?,?)", (guild, emoji,))
-
-    elif r is not None:
-        c.execute("UPDATE drops SET emoji = ? WHERE guild_id = ?", (emoji, guild,))
-
-    db.commit()
-    c.close()
-    db.close()
-
 async def set_last_drop(guild):
-    TimeNow = datetime.datetime.utcnow().strftime('%m, %d, %Y %H:%M:%S')
+    TimeNow = datetime.datetime.utcnow().strftime('%m %d, %Y %H:%M:%S')
     db = sqlite3.connect('drops.sqlite')
     c = db.cursor()
-    c.execute("UPDATE drops SET last = ? WHERE guild_id = ? ", (TimeNow, guild,))
+    c.execute("UPDATE drops_config SET last_drop = ? WHERE guild_id = ? ", (TimeNow, guild,))
     db.commit()
     c.close()
     db.close()
+
+async def toggle_drop(guild, toggle):
+    r = await fetch_drop(guild)
+    db = sqlite3.connect('drops.sqlite')
+    c = db.cursor()
+    if r is not None:
+        c.execute("UPDATE drops_config SET active = ? WHERE guild_id = ?", (toggle, guild,))
+    
+    else:
+        time = await TimeNow()
+        c.execute("INSERT INTO drops_config(guild_id, last_drop, active) VALUES(?,?,?)", (guild, time, toggle,))
+    
+    db.commit()
+    c.close()
+    db.close()
+
